@@ -1,0 +1,167 @@
+[
+  {
+    "code": "US",
+    "name": "United States",
+    "cities": [
+      "New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX",
+      "Phoenix, AZ", "Philadelphia, PA", "San Antonio, TX", "San Diego, CA",
+      "Dallas, TX", "Austin, TX", "San Jose, CA", "Fort Worth, TX",
+      "Jacksonville, FL", "Columbus, OH", "Charlotte, NC", "Seattle, WA",
+      "Denver, CO", "Boston, MA", "Nashville, TN", "Portland, OR",
+      "Atlanta, GA", "Miami, FL", "Las Vegas, NV", "Minneapolis, MN"
+    ]
+  },
+  {
+    "code": "GB",
+    "name": "United Kingdom",
+    "cities": [
+      "London", "Birmingham", "Manchester", "Glasgow", "Liverpool", "Leeds",
+      "Edinburgh", "Bristol", "Sheffield", "Newcastle upon Tyne",
+      "Nottingham", "Cardiff", "Belfast", "Southampton", "Brighton"
+    ]
+  },
+  {
+    "code": "CA",
+    "name": "Canada",
+    "cities": [
+      "Toronto, ON", "Montreal, QC", "Vancouver, BC", "Calgary, AB",
+      "Edmonton, AB", "Ottawa, ON", "Winnipeg, MB", "Quebec City, QC",
+      "Hamilton, ON", "Kitchener, ON", "London, ON", "Victoria, BC",
+      "Halifax, NS", "Saskatoon, SK"
+    ]
+  },
+  {
+    "code": "AU",
+    "name": "Australia",
+    "cities": [
+      "Sydney, NSW", "Melbourne, VIC", "Brisbane, QLD", "Perth, WA",
+      "Adelaide, SA", "Gold Coast, QLD", "Canberra, ACT", "Newcastle, NSW",
+      "Wollongong, NSW", "Hobart, TAS", "Darwin, NT", "Cairns, QLD"
+    ]
+  },
+  {
+    "code": "DE",
+    "name": "Germany",
+    "cities": [
+      "Berlin", "Hamburg", "Munich", "Cologne", "Frankfurt", "Stuttgart",
+      "Dusseldorf", "Leipzig", "Dortmund", "Essen", "Bremen", "Dresden",
+      "Hanover", "Nuremberg"
+    ]
+  },
+  {
+    "code": "FR",
+    "name": "France",
+    "cities": [
+      "Paris", "Marseille", "Lyon", "Toulouse", "Nice", "Nantes",
+      "Montpellier", "Strasbourg", "Bordeaux", "Lille", "Rennes",
+      "Reims", "Toulon"
+    ]
+  },
+  {
+    "code": "ES",
+    "name": "Spain",
+    "cities": [
+      "Madrid", "Barcelona", "Valencia", "Seville", "Zaragoza", "Malaga",
+      "Murcia", "Palma", "Bilbao", "Alicante", "Granada", "Cordoba"
+    ]
+  },
+  {
+    "code": "IT",
+    "name": "Italy",
+    "cities": [
+      "Rome", "Milan", "Naples", "Turin", "Palermo", "Genoa", "Bologna",
+      "Florence", "Bari", "Catania", "Venice", "Verona"
+    ]
+  },
+  {
+    "code": "NL",
+    "name": "Netherlands",
+    "cities": [
+      "Amsterdam", "Rotterdam", "The Hague", "Utrecht", "Eindhoven",
+      "Groningen", "Tilburg", "Alkmaar", "Breda", "Nijmegen"
+    ]
+  },
+  {
+    "code": "IE",
+    "name": "Ireland",
+    "cities": [
+      "Dublin", "Cork", "Limerick", "Galway", "Waterford", "Drogheda",
+      "Dundalk", "Kilkenny"
+    ]
+  },
+  {
+    "code": "NZ",
+    "name": "New Zealand",
+    "cities": [
+      "Auckland", "Wellington", "Christchurch", "Hamilton", "Tauranga",
+      "Dunedin", "Palmerston North", "Napier", "Nelson"
+    ]
+  },
+  {
+    "code": "IN",
+    "name": "India",
+    "cities": [
+      "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Kolkata",
+      "Pune", "Ahmedabad", "Jaipur", "Surat", "Lucknow", "Chandigarh",
+      "Indore", "Kochi"
+    ]
+  },
+  {
+    "code": "AE",
+    "name": "United Arab Emirates",
+    "cities": [
+      "Dubai", "Abu Dhabi", "Sharjah", "Al Ain", "Ajman",
+      "Ras Al Khaimah", "Fujairah"
+    ]
+  },
+  {
+    "code": "ZA",
+    "name": "South Africa",
+    "cities": [
+      "Johannesburg", "Cape Town", "Durban", "Pretoria", "Port Elizabeth",
+      "Bloemfontein", "East London", "Pietermaritzburg"
+    ]
+  },
+  {
+    "code": "BR",
+    "name": "Brazil",
+    "cities": [
+      "Sao Paulo", "Rio de Janeiro", "Brasilia", "Salvador", "Fortaleza",
+      "Belo Horizonte", "Manaus", "Curitiba", "Recife", "Porto Alegre"
+    ]
+  },
+  {
+    "code": "MX",
+    "name": "Mexico",
+    "cities": [
+      "Mexico City", "Guadalajara", "Monterrey", "Puebla", "Tijuana",
+      "Leon", "Merida", "Cancun", "Queretaro"
+    ]
+  },
+  {
+    "code": "SG",
+    "name": "Singapore",
+    "cities": ["Singapore"]
+  },
+  {
+    "code": "PT",
+    "name": "Portugal",
+    "cities": [
+      "Lisbon", "Porto", "Braga", "Coimbra", "Faro", "Funchal"
+    ]
+  },
+  {
+    "code": "PL",
+    "name": "Poland",
+    "cities": [
+      "Warsaw", "Krakow", "Lodz", "Wroclaw", "Poznan", "Gdansk", "Szczecin"
+    ]
+  },
+  {
+    "code": "TR",
+    "name": "Turkey",
+    "cities": [
+      "Istanbul", "Ankara", "Izmir", "Bursa", "Antalya", "Adana", "Konya"
+    ]
+  }
+]

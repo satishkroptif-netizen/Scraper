@@ -1,0 +1,10 @@
+@import './styles/base.css';
+@import './styles/components.css';
+@import './styles/home.css';
+@import './styles/tasks.css';
+@import './styles/results.css';
+@import './styles/results-drawer.css';
+@import './styles/guide.css';
+@import './styles/api.css';
+@import './styles/settings.css';
+@import './styles/responsive.css';

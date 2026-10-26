@@ -1,0 +1,11 @@
+{
+  "maxResults": 20,
+  "maxResultsPerCity": 10,
+  "reviews": false,
+  "maxReviews": 20,
+  "enrich": true,
+  "browserMode": "auto",
+  "apiPort": 4319,
+  "apiToken": "",
+  "minimizeBrowser": false
+}
