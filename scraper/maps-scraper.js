@@ -224,7 +224,7 @@ class MapsScraper {
       if (/ProcessSingleton|already in use|user data directory is already in use|browser is already running/i.test(message)) {
         throw new ScrapeError(
           'PROFILE_BUSY',
-          'Chrome is already using MapScraper’s profile. Close the Chrome window opened by MapScraper, then try again.'
+          'Chrome is already using Step in Scraper’s profile. Close the Chrome window opened by Step in Scraper, then try again.'
         );
       }
       throw new ScrapeError('BROWSER_LAUNCH_FAILED', `Chrome could not start. ${message.slice(0, 300)}`);

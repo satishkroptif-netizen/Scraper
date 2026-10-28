@@ -113,13 +113,13 @@ export function AppShell() {
             <ShieldCheck size={13} />
             <span>For educational &amp; lawful use only</span>
           </div>
-          <span className="sidebar-version">MapScraper v{info?.version || '1.0.0'} · local-first</span>
+          <span className="sidebar-version">Step in Scraper v{info?.version || '1.0.0'} · local-first</span>
         </div>
       </aside>
 
       <div className="app-content">
         <div className="mobile-bar">
-          <Link to="/" aria-label="MapScraper home">
+          <Link to="/" aria-label="Step in Scraper home">
             <Logo compact />
           </Link>
           <div className="mobile-nav">

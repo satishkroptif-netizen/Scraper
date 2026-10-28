@@ -279,7 +279,7 @@ open("leads.csv", "w", encoding="utf-8").write(csv_data)`;
             A local API, <span className="title-accent">for your own tools.</span>
           </>
         }
-        description="Control MapScraper from scripts, Sheets, or another app. The REST API listens only on this computer and stores everything locally."
+        description="Control Step in Scraper from scripts, Sheets, or another app. The REST API listens only on this computer and stores everything locally."
         actions={
           <Link to="/settings" className="btn btn-ghost">
             <KeyRound size={16} /> API settings
@@ -340,7 +340,7 @@ open("leads.csv", "w", encoding="utf-8").write(csv_data)`;
             <li>
               <span>1</span>
               <div>
-                <strong>Keep MapScraper open</strong>
+                <strong>Keep Step in Scraper open</strong>
                 <p>The API runs inside the desktop app and stops when the app quits.</p>
               </div>
             </li>

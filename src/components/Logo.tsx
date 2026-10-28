@@ -36,7 +36,7 @@ export function Logo({ compact = false }: { compact?: boolean }) {
     <span className="logo">
       <LogoMark size={compact ? 32 : 38} />
       <span className="logo-text">
-        <span className="logo-name">MapScraper</span>
+        <span className="logo-name">Step in Scraper</span>
         {!compact ? <span className="logo-sub">Google Maps lead finder</span> : null}
       </span>
     </span>

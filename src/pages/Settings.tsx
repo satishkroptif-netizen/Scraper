@@ -289,7 +289,7 @@ export function SettingsPage() {
               </span>
               <div>
                 <h2>Browser &amp; Google</h2>
-                <p>MapScraper drives the Chrome on your computer using its own private profile.</p>
+                <p>Step in Scraper drives the Chrome on your computer using its own private profile.</p>
               </div>
               <span className={cx('settings-status', info?.chrome?.found ? 'is-ready' : 'is-missing')}>
                 {info?.chrome?.found ? <CheckCircle2 size={13} /> : <XCircle size={13} />}
@@ -331,7 +331,7 @@ export function SettingsPage() {
                   <strong>Google account for reviews</strong>
                   <p>
                     Optional. Signed-out Google shows about 5 public reviews per business. Connecting an account lets
-                    MapScraper collect more, and the login stays inside its private Chrome profile.
+                    Step in Scraper collect more, and the login stays inside its private Chrome profile.
                   </p>
                 </div>
               </div>
@@ -360,7 +360,7 @@ export function SettingsPage() {
             {signInState === 'signed-out' ? (
               <div className="settings-signin-result">
                 <Info size={16} />
-                <span>{signInError || 'No signed-in Google account was found in MapScraper’s Chrome profile yet.'}</span>
+                <span>{signInError || 'No signed-in Google account was found in Step in Scraper’s Chrome profile yet.'}</span>
               </div>
             ) : null}
             {signInState === 'error' ? (
@@ -708,7 +708,7 @@ export function SettingsPage() {
             <span className="settings-about-logo">
               <MapPinIcon />
             </span>
-            <h2>MapScraper</h2>
+            <h2>Step in Scraper</h2>
             <p className="settings-version">Version {info?.version || '1.0.0'}</p>
             <p>
               A beginner-friendly Google Maps lead finder. Built to run locally, keep your data on your computer, and
@@ -732,7 +732,7 @@ export function SettingsPage() {
 
           <InfoCallout tone="legal" title="Responsible use">
             {info?.disclaimer ||
-              'MapScraper is for educational, research, and lawful lead generation use only. Follow Google’s terms, privacy laws, and anti-spam rules.'}
+              'Step in Scraper is for educational, research, and lawful lead generation use only. Follow Google’s terms, privacy laws, and anti-spam rules.'}
           </InfoCallout>
 
           {info?.reviewNote ? (

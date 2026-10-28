@@ -13,8 +13,8 @@ const {
   shell,
 } = require('electron');
 
-app.setName('MapScraper');
-app.setAppUserModelId('com.mapscraper.app');
+app.setName('Step in Scraper');
+app.setAppUserModelId('com.stepinscraper.app');
 
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) {
@@ -28,14 +28,15 @@ const { detectBrowser, openSignInWindow, checkSignedIn } = require('./chrome');
 const { startApiServer } = require('./api-server');
 const { DISCLAIMER, REVIEW_NOTE } = require('../shared/constants');
 const { safeMessage } = require('./util');
+const { loadLicense, validateLicense, hardwareId } = require('./license');
 
 // MAPSCRAPER_USER_DATA keeps test runs (and portable copies) away from the real
-// profile. Normal installs always use %APPDATA%\MapScraper.
+// profile. Normal installs always use %APPDATA%\Step in Scraper.
 app.setPath(
   'userData',
   process.env.MAPSCRAPER_USER_DATA
     ? path.resolve(process.env.MAPSCRAPER_USER_DATA)
-    : path.join(app.getPath('appData'), 'MapScraper')
+    : path.join(app.getPath('appData'), 'Step in Scraper')
 );
 
 const paths = buildPaths();
@@ -121,7 +122,7 @@ function apiInfo() {
 async function appInfo() {
   const settings = store.getSettings();
   return {
-    name: 'MapScraper',
+    name: 'Step in Scraper',
     version: app.getVersion(),
     platform: process.platform,
     packaged: app.isPackaged,
@@ -207,6 +208,17 @@ function registerIpc() {
     return { settings, api: apiInfo() };
   });
 
+  register('license:info', () => {
+    const machineId = hardwareId();
+    let license = null;
+    try {
+      license = loadLicenseSync(paths.dataDir);
+    } catch {
+      license = null;
+    }
+    return { machineId, license, valid: Boolean(license && validateLicense(license, machineId).valid) };
+  });
+
   register('browser:open-signin', async () => {
     if (service?.active) {
       throw new Error('Finish or cancel the running search before connecting Google.');
@@ -289,7 +301,7 @@ function createWindow() {
     minWidth: 1024,
     minHeight: 680,
     show: false,
-    title: 'MapScraper',
+    title: 'Step in Scraper',
     backgroundColor: '#f5f3ee',
     autoHideMenuBar: true,
     icon: iconPath(),
@@ -380,9 +392,9 @@ function createWindow() {
     if (mainWindow && !mainWindow.isDestroyed()) {
       dialog.showMessageBox(mainWindow, {
         type: 'error',
-        title: 'MapScraper restarted',
+        title: 'Step in Scraper restarted',
         message: 'The app window stopped unexpectedly.',
-        detail: `Reason: ${details.reason}. MapScraper will reload.`,
+        detail: `Reason: ${details.reason}. Step in Scraper will reload.`,
         buttons: ['OK'],
       }).then(() => mainWindow?.reload());
     }
@@ -405,7 +417,7 @@ app.whenReady().then(async () => {
     await store.init();
   } catch (error) {
     dialog.showErrorBox(
-      'MapScraper could not start',
+      'Step in Scraper could not start',
       `Your data folder could not be opened.\n\n${safeMessage(error)}\n\nFolder: ${paths.dataDir}`
     );
     app.quit();
@@ -421,6 +433,28 @@ app.whenReady().then(async () => {
   wireService();
   registerIpc();
   buildMenu();
+
+  // --- License validation (offline, self-signed) ---------------------------
+  const machineId = hardwareId();
+  let license = null;
+  try {
+    license = await loadLicense(paths.dataDir);
+  } catch {
+    license = null;
+  }
+
+  const licenseResult = license ? validateLicense(license, machineId) : { valid: false, reason: null };
+
+  if (!licenseResult.valid) {
+    const dataDir = paths.dataDir;
+    const message = licenseResult.reason
+      ? licenseResult.reason + '\n\n'
+      : 'No valid license found.\n\n';
+    const detail = `${message}Place your signed license.json file in:\n${dataDir}\n\nThen restart Step in Scraper.`;
+    dialog.showErrorBox('Step in Scraper — License required', detail);
+    app.quit();
+    return;
+  }
 
   await createApi();
   createWindow();

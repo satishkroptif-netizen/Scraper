@@ -1,4 +1,4 @@
-# MapScraper
+# Step in Scraper
 
 **Google Maps lead finder** — a polished, beginner-friendly desktop app that turns Google Maps searches into clean, exportable business lead lists.
 
@@ -15,7 +15,7 @@ Built for educational, research, and lawful lead generation use only. You are re
 - **Live progress** — watch searches run in real time with logs, counts, and notifications.
 - **Task history** — every search is saved automatically on your PC. Reopen, rerun, export, or delete past searches.
 - **CSV export** — Excel-ready CSV with formula-injection protection and UTF-8 BOM. Export leads or reviews separately.
-- **Local REST API** — control MapScraper from your own scripts, Sheets, or apps. Runs only on this computer (`127.0.0.1`), never exposed to your network.
+- **Local REST API** — control Step in Scraper from your own scripts, Sheets, or apps. Runs only on this computer (`127.0.0.1`), never exposed to your network.
 - **No code required** — install and run like any desktop app. Your data stays on your computer; there is no cloud service, no account, and no tracking.
 
 ## Visual theme
@@ -25,24 +25,24 @@ Deep forest green (`#1a4a3a`) + lime (`#a3d635`) design system with Inter and Pl
 ## Requirements
 
 - Windows 10/11
-- Google Chrome installed (MapScraper drives Chrome on your computer using its own private profile; no setup needed)
+- Google Chrome installed (Step in Scraper drives Chrome on your computer using its own private profile; no setup needed)
 - No coding, no API keys, no Google account required for normal searching
 
 ## Installation
 
 ### Installer (recommended)
 
-Download `MapScraper-1.0.0-x64.exe` from the [Releases](https://github.com/) page, run it, and launch MapScraper from the Start menu or desktop shortcut. The installer is per-user (no admin rights required) and creates a Start Menu shortcut.
+Download `StepInScraper-1.0.0-x64.exe` from the [Releases](https://github.com/) page, run it, and launch Step in Scraper from the Start menu or desktop shortcut. The installer is per-user (no admin rights required) and creates a Start Menu shortcut.
 
 ### Portable
 
-Download `MapScraper-Portable-1.0.0.exe`, run it from anywhere (USB drive, Downloads folder, etc.), and close it when you're done. No installation or registry changes.
+Download `StepInScraper-Portable-1.0.0.exe`, run it from anywhere (USB drive, Downloads folder, etc.), and close it when you're done. No installation or registry changes.
 
 Both packages include everything needed — just Chrome must already be installed.
 
 ### First launch
 
-1. Open MapScraper. A welcome tour appears (you can skip it or reset it later in Settings).
+1. Open Step in Scraper. A welcome tour appears (you can skip it or reset it later in Settings).
 2. On the **New search** page, type a search like `dentists in Austin, TX` and click **Run**.
 3. Watch the leads arrive live. When finished, open a business to see its reviews, or click **Export CSV** to download a spreadsheet.
 
@@ -54,7 +54,7 @@ Choose one of three modes:
 
 1. **Search Maps** — type what and where (e.g. “dentists in Austin, TX”). Business type + place works best.
 2. **Paste links** — paste one or more Google Maps business links.
-3. **Multi-city** — pick one business type and several cities in a country. MapScraper runs the same search in each city and combines the leads.
+3. **Multi-city** — pick one business type and several cities in a country. Step in Scraper runs the same search in each city and combines the leads.
 
 Then set how much to collect:
 
@@ -96,7 +96,7 @@ The **Guide** page walks you through:
 
 ### Local API
 
-MapScraper includes a small REST API (`http://127.0.0.1:4319`) so you can control it from scripts, Sheets, or other apps. The API listens only on this computer and is never exposed to your network.
+Step in Scraper includes a small REST API (`http://127.0.0.1:4319`) so you can control it from scripts, Sheets, or other apps. The API listens only on this computer and is never exposed to your network.
 
 Open the **Local API** page for:
 
@@ -130,14 +130,14 @@ An optional bearer token can be set in **Settings → Local API** to protect the
 
 ## Data & privacy
 
-- Everything lives on **this computer only** under `%APPDATA%\MapScraper\data` (one JSON file per search plus an index; no database, no native modules).
-- There is **no cloud service, no account, and no tracking**. MapScraper reads publicly visible Google Maps business information.
+- Everything lives on **this computer only** under `%APPDATA%\Step in Scraper\data` (one JSON file per search plus an index; no database, no native modules).
+- There is **no cloud service, no account, and no tracking**. Step in Scraper reads publicly visible Google Maps business information.
 - Chrome is driven using its own private profile, separate from your daily browsing.
 - Exports save to your Documents folder (or wherever you choose in the save dialog).
 
 ## Limitations (read before you rely on it)
 
-- MapScraper uses **publicly visible** Google Maps information only. It does not bypass logins, paywalls, or private data.
+- Step in Scraper uses **publicly visible** Google Maps information only. It does not bypass logins, paywalls, or private data.
 - **Signed-out Google shows about 5 public reviews per business.** Connect a Google account in Settings for more reliable review collection (full text + owner replies).
 - Review collection requires a **visible Chrome window**; normal searches can run hidden.
 - Google may show a CAPTCHA or throttle automated traffic. Pause 10–15 minutes if that happens, keep lead numbers modest (10–30 per search is plenty), and avoid repeated identical searches.
@@ -150,13 +150,13 @@ An optional bearer token can be set in **Settings → Local API** to protect the
 - Electron 37 + React 19 + Vite 7 + TypeScript
 - Custom CSS design system (forest green + lime)
 - `playwright-core` driving installed Google Chrome
-- Local JSON storage under `%APPDATA%\MapScraper\data`
+- Local JSON storage under `%APPDATA%\Step in Scraper\data`
 - Local REST API on `127.0.0.1:4319` (Express)
 - Packaged with electron-builder (NSIS + portable, code signing skipped — unsigned installer)
 
 ## Uninstall
 
-Use **Add or remove programs** (Settings → Apps → Installed apps → MapScraper → Uninstall), or run the uninstaller from the Start Menu shortcut folder. Your data folder (`%APPDATA%\MapScraper\data`) is left in place so you can keep your search history; delete it manually if you want to remove all local data.
+Use **Add or remove programs** (Settings → Apps → Installed apps → Step in Scraper → Uninstall), or run the uninstaller from the Start Menu shortcut folder. Your data folder (`%APPDATA%\Step in Scraper\data`) is left in place so you can keep your search history; delete it manually if you want to remove all local data.
 
 ## License
 
@@ -164,4 +164,4 @@ MIT
 
 ---
 
-MapScraper v1.0.0 · local-first · built for lawful lead generation
+Step in Scraper v1.0.0 · local-first · built for lawful lead generation

@@ -41,7 +41,7 @@ const QUICKSTART = [
     number: '02',
     icon: MousePointerClick,
     title: 'Press Start and let Chrome work',
-    body: 'MapScraper opens Google Chrome and collects the public business profile. With enrichment on, it also visits each website to look for emails and social profiles.',
+    body: 'Step in Scraper opens Google Chrome and collects the public business profile. With enrichment on, it also visits each website to look for emails and social profiles.',
     tip: 'Keep the Chrome window open until the search finishes.',
   },
   {
@@ -110,7 +110,7 @@ const FIELDS = [
 const TROUBLESHOOTING = [
   {
     title: 'Chrome is not found',
-    body: 'Install Google Chrome from google.com/chrome, then restart MapScraper. Microsoft Edge is also supported when it is detected.',
+    body: 'Install Google Chrome from google.com/chrome, then restart Step in Scraper. Microsoft Edge is also supported when it is detected.',
     icon: Chrome,
   },
   {
@@ -130,7 +130,7 @@ const TROUBLESHOOTING = [
   },
   {
     title: 'Chrome profile is already in use',
-    body: 'MapScraper uses its own Chrome profile. Close any Chrome window that MapScraper opened, then run the search again.',
+    body: 'Step in Scraper uses its own Chrome profile. Close any Chrome window that Step in Scraper opened, then run the search again.',
     icon: Layers,
   },
   {
@@ -149,7 +149,7 @@ const FAQS = [
   {
     question: 'Where is my data stored?',
     answer:
-      'Everything is saved as JSON files in MapScraper’s local app-data folder on this computer. Nothing is sent to a MapScraper server. You can open the folder from Settings.',
+      'Everything is saved as JSON files in Step in Scraper’s local app-data folder on this computer. Nothing is sent to a Step in Scraper server. You can open the folder from Settings.',
   },
   {
     question: 'How many leads can I collect?',
@@ -159,7 +159,7 @@ const FAQS = [
   {
     question: 'Is this allowed?',
     answer:
-      'MapScraper is for educational, research, and lawful lead generation use. You are responsible for following Google’s Terms of Service and applicable privacy, data-protection, and anti-spam laws. Collect only public business information and contact people who have a legitimate reason to hear from you.',
+      'Step in Scraper is for educational, research, and lawful lead generation use. You are responsible for following Google’s Terms of Service and applicable privacy, data-protection, and anti-spam laws. Collect only public business information and contact people who have a legitimate reason to hear from you.',
   },
   {
     question: 'Can I use the results commercially?',
@@ -200,7 +200,7 @@ export function GuidePage() {
           <div>
             <h2>No coding. No setup. Just Chrome.</h2>
             <p>
-              MapScraper is a desktop app that reads public Google Maps business profiles and turns them into a tidy
+              Step in Scraper is a desktop app that reads public Google Maps business profiles and turns them into a tidy
               spreadsheet. This page explains how to get the best results and what to do when something looks off.
             </p>
           </div>
@@ -314,7 +314,7 @@ export function GuidePage() {
             </span>
             <h2>About reviews</h2>
             <p>
-              When you enable <strong>Collect reviews</strong>, MapScraper opens each business’s Reviews tab and saves the
+              When you enable <strong>Collect reviews</strong>, Step in Scraper opens each business’s Reviews tab and saves the
               text, star rating, author, and owner replies.
             </p>
             <ul className="check-list">
@@ -339,7 +339,7 @@ export function GuidePage() {
             </span>
             <h2>Multi-city searches</h2>
             <p>
-              Pick a business type and a country, then tick every city you want. MapScraper runs the same search in each
+              Pick a business type and a country, then tick every city you want. Step in Scraper runs the same search in each
               one and combines the leads into one task.
             </p>
             <ul className="check-list">
@@ -415,8 +415,8 @@ export function GuidePage() {
         </section>
 
         <aside className="guide-side">
-          <InfoCallout tone="legal" title="Use MapScraper responsibly">
-            MapScraper is for educational, research, and lawful lead generation only. You are responsible for following
+          <InfoCallout tone="legal" title="Use Step in Scraper responsibly">
+            Step in Scraper is for educational, research, and lawful lead generation only. You are responsible for following
             Google’s Terms of Service, applicable privacy and data-protection laws, and anti-spam regulations. Only
             contact people who have a legitimate reason to hear from you.
           </InfoCallout>

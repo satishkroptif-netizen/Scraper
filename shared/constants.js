@@ -1,7 +1,7 @@
 'use strict';
 
 const DISCLAIMER =
-  'MapScraper is for educational, research, and lawful lead generation use only. ' +
+  'Step in Scraper is for educational, research, and lawful lead generation use only. ' +
   'You are responsible for following Google\u2019s Terms of Service, applicable privacy and data-protection laws, ' +
   'and anti-spam regulations. Only contact people who have a legitimate reason to hear from you.';
 

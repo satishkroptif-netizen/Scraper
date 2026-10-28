@@ -20,13 +20,13 @@ const STORAGE_KEY = 'mapscraper.onboarded.v1';
 
 const STEPS = [
   {
-    title: 'Welcome to MapScraper',
+    title: 'Welcome to Step in Scraper',
     body: 'Turn Google Maps searches into a clean list of local businesses — complete with contact details, websites, ratings, and reviews.',
     icon: Sparkles,
   },
   {
     title: 'Chrome does the browsing',
-    body: 'MapScraper uses the Google Chrome already on your computer. Nothing to configure, and no account is required for a normal search.',
+    body: 'Step in Scraper uses the Google Chrome already on your computer. Nothing to configure, and no account is required for a normal search.',
     icon: Chrome,
   },
   {

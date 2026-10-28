@@ -36,7 +36,7 @@ export function SystemProvider({ children }: { children: ReactNode }) {
       setSettings(nextSettings);
       setError(null);
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'MapScraper could not load its settings.');
+      setError(loadError instanceof Error ? loadError.message : 'Step in Scraper could not load its settings.');
     } finally {
       setLoading(false);
     }

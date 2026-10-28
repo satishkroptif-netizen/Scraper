@@ -83,7 +83,7 @@ async function startApiServer({ store, service, appVersion, preferredPort }) {
     const summaries = service.list();
     res.json({
       ok: true,
-      name: 'MapScraper local API',
+      name: 'Step in Scraper local API',
       version: appVersion,
       activeTaskId: summaries.find((task) => task.status === 'running')?.id || null,
       tasks: summaries.length,
@@ -208,7 +208,7 @@ async function startApiServer({ store, service, appVersion, preferredPort }) {
 
   app.get('/', (req, res) => {
     res.json({
-      name: 'MapScraper local API',
+      name: 'Step in Scraper local API',
       version: appVersion,
       health: '/api/v1/health',
       endpoints: [

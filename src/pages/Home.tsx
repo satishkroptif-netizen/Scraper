@@ -786,7 +786,7 @@ export function HomePage() {
                 </Link>
               }
             >
-              MapScraper could not find Google Chrome or Microsoft Edge. Install Chrome, then restart MapScraper.
+              Step in Scraper could not find Google Chrome or Microsoft Edge. Install Chrome, then restart Step in Scraper.
             </InfoCallout>
           ) : null}
         </section>
@@ -911,7 +911,7 @@ export function HomePage() {
           </section>
 
           <InfoCallout tone="legal" title="Use it responsibly">
-            MapScraper is for educational, research, and lawful lead generation only. Respect Google’s terms, privacy
+            Step in Scraper is for educational, research, and lawful lead generation only. Respect Google’s terms, privacy
             laws, and anti-spam rules. Only contact people with a legitimate reason to hear from you.
           </InfoCallout>
         </aside>

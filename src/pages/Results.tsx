@@ -886,7 +886,7 @@ export function ResultsPage() {
       <div className="results-footer-note">
         <ShieldCheck size={14} />
         <span>
-          MapScraper collects publicly visible business information for lawful research. Verify details before contacting
+          Step in Scraper collects publicly visible business information for lawful research. Verify details before contacting
           anyone and follow anti-spam laws in your region.
         </span>
         <Link to="/guide" className="text-button">

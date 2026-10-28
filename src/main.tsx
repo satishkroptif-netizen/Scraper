@@ -8,7 +8,7 @@ import { App } from './App';
 const container = document.getElementById('root');
 
 if (!container) {
-  throw new Error('MapScraper could not find its app container.');
+  throw new Error('Step in Scraper could not find its app container.');
 }
 
 createRoot(container).render(

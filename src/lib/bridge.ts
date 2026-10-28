@@ -3,6 +3,7 @@ import type {
   BridgeResponse,
   CreateTaskPayload,
   ExportResult,
+  LicenseInfo,
   MapScraperBridge,
   Settings,
   SignInCheck,
@@ -12,7 +13,7 @@ import type {
 
 function bridge(): MapScraperBridge {
   if (!window.mapscraper) {
-    throw new Error('MapScraper must be opened from its desktop app window.');
+    throw new Error('Step in Scraper must be opened from its desktop app window.');
   }
   return window.mapscraper;
 }
@@ -51,6 +52,8 @@ export const api = {
   getSettings: (): Promise<Settings> => unwrap(bridge().settings.get()),
   saveSettings: (patch: Partial<Settings>): Promise<{ settings: Settings }> =>
     unwrap(bridge().settings.save(patch)),
+
+  getLicenseInfo: (): Promise<LicenseInfo> => unwrap(bridge().license.info()),
 
   onTaskUpdate: (callback: (summary: TaskSummary) => void) =>
     window.mapscraper ? bridge().onTaskUpdate(callback) : noopSubscription(),

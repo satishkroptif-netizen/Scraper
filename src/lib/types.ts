@@ -182,6 +182,19 @@ export interface ExportResult {
   filename?: string;
 }
 
+export interface LicenseInfo {
+  machineId: string | null;
+  license: {
+    customer: string;
+    orderId: string;
+    expiry: string;
+    issuedAt: string;
+    machineId: string | null;
+    signature: string;
+  } | null;
+  valid: boolean;
+}
+
 export interface SignInCheck {
   signedIn: boolean;
   error?: string;
@@ -217,6 +230,9 @@ export interface MapScraperBridge {
   settings: {
     get: () => Promise<BridgeResponse<Settings>>;
     save: (patch: Partial<Settings>) => Promise<BridgeResponse<{ settings: Settings; api: ApiInfo }>>;
+  };
+  license: {
+    info: () => Promise<BridgeResponse<LicenseInfo>>;
   };
   onTaskUpdate: (callback: (summary: TaskSummary) => void) => () => void;
   onTaskLog: (callback: (payload: { taskId: string; entry: LogEntry }) => void) => () => void;

@@ -33,6 +33,9 @@ contextBridge.exposeInMainWorld('mapscraper', {
     get: () => ipcRenderer.invoke('settings:get'),
     save: (patch) => ipcRenderer.invoke('settings:save', patch),
   },
+  license: {
+    info: () => ipcRenderer.invoke('license:info'),
+  },
   onTaskUpdate: (callback) => subscribe('task:update', callback),
   onTaskLog: (callback) => subscribe('task:log', callback),
   onTaskResult: (callback) => subscribe('task:result', callback),
