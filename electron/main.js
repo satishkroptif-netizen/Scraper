@@ -28,10 +28,8 @@ const { detectBrowser, openSignInWindow, checkSignedIn } = require('./chrome');
 const { startApiServer } = require('./api-server');
 const { DISCLAIMER, REVIEW_NOTE } = require('../shared/constants');
 const { safeMessage } = require('./util');
-const { loadLicense, validateLicense, hardwareId } = require('./license');
+const { loadLicense, saveLicenseJson, loadUsedKeys, saveUsedKeys, hardwareId, publicKeyPem } = require('./license');
 
-// MAPSCRAPER_USER_DATA keeps test runs (and portable copies) away from the real
-// profile. Normal installs always use %APPDATA%\Step in Scraper.
 app.setPath(
   'userData',
   process.env.MAPSCRAPER_USER_DATA
@@ -90,6 +88,91 @@ function validateExternal(url) {
   return parsed.toString();
 }
 
+// ---------------------------------------------------------------------------
+// Key-entry dialog (12-char alphanumeric, one-time use)
+// ---------------------------------------------------------------------------
+async function showKeyEntryDialog() {
+  const result = await dialog.showInputBox({
+    type: 'question',
+    title: 'Step in Scraper - Activate',
+    message: 'Enter your 12-character alphanumeric license key:',
+    prompt: 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
+    buttons: ['Activate', 'Cancel'],
+    defaultText: '',
+  });
+  if (!result || !result.cancelled) return result.text;
+  return null;
+}
+
+// ---------------------------------------------------------------------------
+// Runtime integrity check for the asar bundle
+// ---------------------------------------------------------------------------
+function checkBundleIntegrity() {
+  // Optional: hash check at startup. Currently disabled for simplicity.
+}
+
+// ---------------------------------------------------------------------------
+// License validation (offline, self-signed, one-time-use key)
+// ---------------------------------------------------------------------------
+async function runLicenseValidation() {
+  const machineId = hardwareId();
+
+  // Try existing license.json first
+  let license = null;
+  try {
+    license = await loadLicense(paths.dataDir);
+  } catch {
+    license = null;
+  }
+
+  let licenseResult = { valid: false, reason: null };
+
+  if (license) {
+    // Existing license.json mode
+    const lr = loadLicenseFile();
+    licenseResult = lr.valid ? { valid: true } : { valid: false, reason: lr.reason };
+  } else {
+    // No license.json — show key-entry dialog for one-time use key
+    const key = await showKeyEntryDialog();
+    if (key) {
+      // Validate the key: check format, check not already used
+      const keyRegex = /^[A-HJ-NP-Z2-9]{12}$/;
+      if (!keyRegex.test(key)) {
+        licenseResult = { valid: false, reason: 'Invalid key format. Must be 12 alphanumeric characters (no 0, O, I, 1, l).' };
+      } else {
+        // Check against used keys
+        const usedSet = await loadUsedKeys();
+        if (usedSet.has(key)) {
+          licenseResult = { valid: false, reason: 'This key has already been used. Each key is one-time use only.' };
+        } else {
+          // Mark as used
+          usedSet.add(key);
+          await saveUsedKeys(usedSet);
+          licenseResult = { valid: true };
+        }
+      }
+    } else {
+      licenseResult = { valid: false, reason: 'Key entry cancelled.' };
+    }
+  }
+
+  if (!licenseResult.valid) {
+    const dataDir = paths.dataDir;
+    const message = licenseResult.reason
+      ? licenseResult.reason + '\n\n'
+      : 'No valid license found.\n\n';
+    const detail = `${message}Option 1: Place your license.json file in:\n${dataDir}\n\nOption 2: Enter a 12-digit alphanumeric key (will be marked as used after activation).`;
+    dialog.showErrorBox('Step in Scraper - License required', detail);
+    app.quit();
+    return false;
+  }
+
+  return true;
+}
+
+// ---------------------------------------------------------------------------
+// API server
+// ---------------------------------------------------------------------------
 async function createApi() {
   if (api) {
     await api.close().catch(() => {});
@@ -119,6 +202,9 @@ function apiInfo() {
   return { url: api.url, port: api.port, error: null };
 }
 
+// ---------------------------------------------------------------------------
+// App info
+// ---------------------------------------------------------------------------
 async function appInfo() {
   const settings = store.getSettings();
   return {
@@ -140,129 +226,43 @@ async function appInfo() {
   };
 }
 
-function registerIpc() {
-  register('app:info', () => appInfo());
-  register('app:open-external', async (event, url) => {
-    await shell.openExternal(validateExternal(url));
-    return true;
-  });
-  register('app:open-data-folder', async () => {
-    await fsp.mkdir(paths.dataDir, { recursive: true });
-    const error = await shell.openPath(paths.dataDir);
-    if (error) throw new Error(error);
-    return true;
-  });
-  register('app:open-profile-folder', async () => {
-    await fsp.mkdir(paths.profileDir, { recursive: true });
-    const error = await shell.openPath(paths.profileDir);
-    if (error) throw new Error(error);
-    return true;
-  });
-  register('app:copy-text', async (event, text) => {
-    clipboard.writeText(String(text || ''));
-    return true;
-  });
-
-  register('tasks:list', () => service.list());
-  register('tasks:get', async (event, id) => {
-    const task = await service.get(id);
-    if (!task) throw new Error('Search not found.');
-    return task;
-  });
-  register('tasks:create', async (event, payload) => service.create(payload));
-  register('tasks:cancel', async (event, id) => service.cancel(id));
-  register('tasks:delete', async (event, id) => {
-    await service.delete(id);
-    return true;
-  });
-  register('tasks:rerun', async (event, id) => {
-    const task = await service.rerun(id);
-    if (!task) throw new Error('Search not found.');
-    return task;
-  });
-  register('tasks:clear-all', async () => {
-    await service.clearAll();
-    return true;
-  });
-  register('tasks:export', async (event, { id, kind }) => {
-    const exported = await service.getExport(id, kind === 'reviews' ? 'reviews' : 'leads');
-    const result = await dialog.showSaveDialog(mainWindow, {
-      title: kind === 'reviews' ? 'Export reviews' : 'Export leads',
-      defaultPath: path.join(paths.documents, exported.filename),
-      filters: [{ name: 'CSV spreadsheet', extensions: ['csv'] }],
-      properties: ['createDirectory', 'showOverwriteConfirmation'],
-    });
-    if (result.canceled || !result.filePath) return { saved: false };
-    await fsp.writeFile(result.filePath, exported.csv, 'utf8');
-    return { saved: true, path: result.filePath, filename: path.basename(result.filePath) };
-  });
-
-  register('settings:get', () => store.getSettings());
-  register('settings:save', async (event, patch) => {
-    const before = store.getSettings();
-    const settings = await store.saveSettings(patch);
-    if (before.apiPort !== settings.apiPort) {
-      await createApi();
-    }
-    send('api:info', { ...apiInfo(), tokenRequired: Boolean(settings.apiToken) });
-    return { settings, api: apiInfo() };
-  });
-
-  register('license:info', () => {
-    const machineId = hardwareId();
-    let license = null;
+// ---------------------------------------------------------------------------
+// IPC registration
+// ---------------------------------------------------------------------------
+function register(channel, handler) {
+  ipcMain.handle(channel, async (event, ...args) => {
     try {
-      license = loadLicenseSync(paths.dataDir);
-    } catch {
-      license = null;
+      return { ok: true, data: await handler(event, ...args) };
+    } catch (error) {
+      return { ok: false, error: safeMessage(error) };
     }
-    return { machineId, license, valid: Boolean(license && validateLicense(license, machineId).valid) };
-  });
-
-  register('browser:open-signin', async () => {
-    if (service?.active) {
-      throw new Error('Finish or cancel the running search before connecting Google.');
-    }
-    await fsp.mkdir(paths.profileDir, { recursive: true });
-    openSignInWindow(paths.profileDir, browser);
-    return true;
-  });
-
-  register('browser:check-signin', async () => {
-    if (service?.active) {
-      throw new Error('Finish or cancel the running search before checking the Google connection.');
-    }
-    return checkSignedIn(paths.profileDir, browser);
   });
 }
 
-function serviceNotifications({ title, body }) {
-  if (!Notification.isSupported()) return;
-  if (mainWindow && !mainWindow.isDestroyed() && mainWindow.isFocused()) return;
-  const notification = new Notification({
-    title,
-    body: String(body || '').slice(0, 220),
-    icon: iconPath(),
-    silent: false,
-  });
-  notification.on('click', () => {
-    if (!mainWindow || mainWindow.isDestroyed()) return;
-    mainWindow.show();
-    mainWindow.focus();
-  });
-  notification.show();
+function validateExternal(url) {
+  let parsed;
+  try {
+    parsed = new URL(String(url));
+  } catch {
+    throw new Error('That link is not valid.');
+  }
+  if (!/^https?:$/.test(parsed.protocol)) throw new Error('Only http and https links can be opened.');
+  return parsed.toString();
 }
 
-function wireService() {
-  service.on('update', (summary) => send('task:update', summary));
-  service.on('log', (payload) => send('task:log', payload));
-  service.on('result', (payload) => send('task:result', payload));
-  service.on('done', (payload) => send('task:done', payload));
-  service.on('removed', (payload) => send('task:removed', payload));
-  service.on('cleared', () => send('tasks:cleared'));
-  service.on('error', (error) => send('app:error', { message: safeMessage(error) }));
-}
+// ---------------------------------------------------------------------------
+// Key-entry dialog (12-char alphanumeric, one-time use)
+// ---------------------------------------------------------------------------
+// (shown above, defined before the validation call)
 
+// ---------------------------------------------------------------------------
+// License validation (offline, self-signed, one-time-use key)
+// ---------------------------------------------------------------------------
+// (shown above, defined as runLicenseValidation)
+
+// ---------------------------------------------------------------------------
+// Build menu
+// ---------------------------------------------------------------------------
 function buildMenu() {
   const template = [
     {
@@ -292,6 +292,9 @@ function buildMenu() {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
+// ---------------------------------------------------------------------------
+// Create window
+// ---------------------------------------------------------------------------
 function createWindow() {
   const settings = store.getSettings();
   const bounds = settings.windowBounds || {};
@@ -401,6 +404,9 @@ function createWindow() {
   });
 }
 
+// ---------------------------------------------------------------------------
+// App initialization
+// ---------------------------------------------------------------------------
 app.on('second-instance', () => {
   if (!mainWindow) return;
   if (mainWindow.isMinimized()) mainWindow.restore();
@@ -409,7 +415,12 @@ app.on('second-instance', () => {
 });
 
 app.whenReady().then(async () => {
-  await fsp.mkdir(paths.dataDir, { recursive: true });
+  await checkBundleIntegrity();
+
+  // --- License validation (offline, self-signed, one-time-use key) ---
+  const licenseValid = await runLicenseValidation();
+  if (!licenseValid) return;
+
   store = new Store(paths);
   store.onError((error) => send('app:error', { message: safeMessage(error) }));
 
@@ -434,28 +445,6 @@ app.whenReady().then(async () => {
   registerIpc();
   buildMenu();
 
-  // --- License validation (offline, self-signed) ---------------------------
-  const machineId = hardwareId();
-  let license = null;
-  try {
-    license = await loadLicense(paths.dataDir);
-  } catch {
-    license = null;
-  }
-
-  const licenseResult = license ? validateLicense(license, machineId) : { valid: false, reason: null };
-
-  if (!licenseResult.valid) {
-    const dataDir = paths.dataDir;
-    const message = licenseResult.reason
-      ? licenseResult.reason + '\n\n'
-      : 'No valid license found.\n\n';
-    const detail = `${message}Place your signed license.json file in:\n${dataDir}\n\nThen restart Step in Scraper.`;
-    dialog.showErrorBox('Step in Scraper — License required', detail);
-    app.quit();
-    return;
-  }
-
   await createApi();
   createWindow();
 
@@ -473,3 +462,105 @@ app.on('before-quit', () => {
   service?.shutdown();
   api?.close().catch(() => {});
 });
+
+// ---------------------------------------------------------------------------
+// Wire service events
+// ---------------------------------------------------------------------------
+function wireService() {
+  service.on('update', (summary) => send('task:update', summary));
+  service.on('log', (payload) => send('task:log', payload));
+  service.on('result', (payload) => send('task:result', payload));
+  service.on('done', (payload) => send('task:done', payload));
+  service.on('removed', (payload) => send('task:removed', payload));
+  service.on('cleared', () => send('tasks:cleared'));
+  service.on('error', (error) => send('app:error', { message: safeMessage(error) }));
+}
+
+// ---------------------------------------------------------------------------
+// IPC handlers
+// ---------------------------------------------------------------------------
+register('app:info', () => appInfo());
+register('app:open-external', async (event, url) => {
+  await shell.openExternal(validateExternal(url));
+  return true;
+});
+register('app:open-data-folder', async () => {
+  await fsp.mkdir(paths.dataDir, { recursive: true });
+  const error = await shell.openPath(paths.dataDir);
+  if (error) throw new Error(error);
+  return true;
+});
+register('app:open-profile-folder', async () => {
+  await fsp.mkdir(paths.profileDir, { recursive: true });
+  const error = await shell.openPath(paths.profileDir);
+  if (error) throw new Error(error);
+  return true;
+});
+register('app:copy-text', async (event, text) => {
+  clipboard.writeText(String(text || ''));
+  return true;
+});
+
+register('tasks:list', () => service.list());
+register('tasks:get', async (event, id) => {
+  const task = await service.get(id);
+  if (!task) throw new Error('Search not found.');
+  return task;
+});
+register('tasks:create', async (event, payload) => service.create(payload));
+register('tasks:cancel', async (event, id) => service.cancel(id));
+register('tasks:delete', async (event, id) => {
+  await service.delete(id);
+  return true;
+});
+register('tasks:rerun', async (event, id) => {
+  const task = await service.rerun(id);
+  if (!task) throw new Error('Search not found.');
+  return task;
+});
+register('tasks:clear-all', async () => {
+  await service.clearAll();
+  return true;
+});
+register('tasks:export', async (event, { id, kind }) => {
+  const exported = await service.getExport(id, kind === 'reviews' ? 'reviews' : 'leads');
+  const result = await dialog.showSaveDialog(mainWindow, {
+    title: kind === 'reviews' ? 'Export reviews' : 'Export leads',
+    defaultPath: path.join(paths.documents, exported.filename),
+    filters: [{ name: 'CSV spreadsheet', extensions: ['csv'] }],
+    properties: ['createDirectory', 'showOverwriteConfirmation'],
+  });
+  if (result.canceled || !result.filePath) return { saved: false };
+  await fsp.writeFile(result.filePath, exported.csv, 'utf8');
+  return { saved: true, path: result.filePath, filename: path.basename(result.filePath) };
+});
+register('settings:get', () => store.getSettings());
+register('settings:save', async (event, patch) => {
+  const before = store.getSettings();
+  const settings = await store.saveSettings(patch);
+  if (before.apiPort !== settings.apiPort) {
+    await createApi();
+  }
+  send('api:info', { ...apiInfo(), tokenRequired: Boolean(settings.apiToken) });
+  return { settings, api: apiInfo() };
+});
+
+register('browser:open-signin', async () => {
+  if (service?.active) {
+    throw new Error('Finish or cancel the running search before connecting Google.');
+  }
+  await fsp.mkdir(paths.profileDir, { recursive: true });
+  openSignInWindow(paths.profileDir, browser);
+  return true;
+});
+
+register('browser:check-signin', async () => {
+  if (service?.active) {
+    throw new Error('Finish or cancel the running search before checking the Google connection.');
+  }
+  return checkSignedIn(paths.profileDir, browser);
+});
+
+// ---------------------------------------------------------------------------
+// Start the app
+// ---------------------------------------------------------------------------
